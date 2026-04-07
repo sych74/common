@@ -39,9 +39,6 @@ actions:
         return { result: 0 };
       }
 
-      config.envName1 = envName1;
-      config.envName2 = envName2;
-
       resp = api.env.control.ExecCmdByGroup({
           envName: "${env.name}",
           session: session,

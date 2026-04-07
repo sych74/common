@@ -23,7 +23,25 @@ actions:
         config[tmp[0]] = tmp[1];
       }
       if (config.cluster) config.cluster = String(config.cluster) != "false";
-      
+
+      var envName1 = config.envName1 != null ? String(config.envName1).trim() : "";
+      var envName2 = config.envName2 != null ? String(config.envName2).trim() : "";
+      var currentEnvName = "${env.name}";
+      if (!envName1 || !envName2 || (currentEnvName !== envName1 && currentEnvName !== envName2)) {
+        resp = api.env.control.ExecCmdByGroup({
+          envName: currentEnvName,
+          session: session,
+          nodeGroup: "${this.nodeGroup}",
+          commandList: [{"command": "rm -f /root/clustering"}],
+          userName: "root"
+        });
+        if (resp.result != 0) return resp;
+        return { result: 0 };
+      }
+
+      config.envName1 = envName1;
+      config.envName2 = envName2;
+
       resp = api.env.control.ExecCmdByGroup({
           envName: "${env.name}",
           session: session,
